@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Narrative | Electricity Consumption Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sticky Nav -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Plugging into the Future</span>
+        </div>
+        <div class="nav-links">
+            <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/story" class="active"><i class="fa-solid fa-book-open"></i> Story</a>
+            <a href="/about"><i class="fa-solid fa-terminal"></i> SQL Console & Info</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container" style="padding-top: 40px;">
+        <h2 class="section-title"><i class="fa-solid fa-book-bookmark"></i> Data Storytelling</h2>
+        
+        <div class="glass-card" style="margin-bottom: 30px;">
+            <h3>Project Story Overview</h3>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
+                A narrative-driven view highlighting the crucial turning points in India's energy usage timeline. 
+                Using Tableau Story points, we explore how power grid operations fluctuated between 2019 and 2020, 
+                showcasing localized impacts of industrial density, regional population growth, and lockdown restrictions.
+            </p>
+        </div>
+
+        <div class="glass-card" style="padding: 15px;">
+            <div class="iframe-container">
+                <iframe
+                    src="https://public.tableau.com/views/Book3_17831533174410/Story1?:showVizHome=no&:embed=true"
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Electricity Consumption Analysis. Powered by Flask, SQL, and Tableau.</p>
+    </footer>
+
+</body>
+</html>

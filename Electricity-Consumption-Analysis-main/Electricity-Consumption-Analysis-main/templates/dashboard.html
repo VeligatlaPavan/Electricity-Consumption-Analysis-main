@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard | Python Data Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Include Plotly.js CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+</head>
+<body>
+
+    <!-- Sticky Nav -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Plugging into the Future</span>
+        </div>
+        <div class="nav-links">
+            <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/dashboard" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/story"><i class="fa-solid fa-book-open"></i> Story</a>
+            <a href="/about"><i class="fa-solid fa-terminal"></i> SQL Console & Info</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container" style="padding-top: 40px; max-width: 1300px;">
+        <h2 class="section-title"><i class="fa-solid fa-square-poll-vertical"></i> Advanced Python Visualizations</h2>
+
+        <!-- Tabs Header -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(evt => switchTab(evt, 'interactive-plotly'))">
+                    <i class="fa-solid fa-circle-play"></i> Plotly Interactive Dashboard
+                </button>
+                <button class="tab-btn" onclick="switchTab(evt => switchTab(evt, 'static-matplotlib'))">
+                    <i class="fa-solid fa-image"></i> Matplotlib Static Figures
+                </button>
+                <button class="tab-btn" onclick="switchTab(evt => switchTab(evt, 'tableau-dashboard'))">
+                    <i class="fa-brands fa-salesforce"></i> Tableau Embed
+                </button>
+            </div>
+
+            <!-- Tab Content 1: Plotly Interactive -->
+            <div id="interactive-plotly" class="tab-content active">
+                <div class="grid-2">
+                    <!-- Scenario 1 Plotly -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div class="badge">Scenario 1 (Plotly)</div>
+                        <div id="scenario1Plotly" style="height: 400px; width: 100%;"></div>
+                    </div>
+
+                    <!-- Scenario 2 Plotly -->
+                    <div class="glass-card" style="padding: 20px;">
+                        <div class="badge">Scenario 2 (Plotly)</div>
+                        <div id="scenario2Plotly" style="height: 400px; width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3 Plotly & Recovery Stats Table -->
+                <div class="glass-card" style="margin-top: 30px; padding: 25px;">
+                    <div class="badge">Scenario 3 (Plotly + NumPy)</div>
+                    <div class="grid-2" style="gap: 30px; align-items: flex-start; margin-bottom: 0;">
+                        <div id="scenario3Plotly" style="height: 420px; width: 100%;"></div>
+                        <div>
+                            <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-calculator" style="color: var(--accent-teal);"></i> NumPy Calculated Growth</h3>
+                            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 15px;">
+                                Recovery rate represents the post-lockdown average rebound speed compared to pre-lockdown average baseline consumption.
+                            </p>
+                            <div class="data-table-wrapper">
+                                <table class="data-table" id="recoveryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>State</th>
+                                            <th>Pre-Lockdown Avg</th>
+                                            <th>Lockdown Avg</th>
+                                            <th>Post-Lockdown Avg</th>
+                                            <th>Recovery Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Populated via Javascript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 2: Matplotlib Static Plots -->
+            <div id="static-matplotlib" class="tab-content">
+                <div class="grid-2">
+                    <div class="glass-card" style="text-align: center;">
+                        <div class="badge">Overall Trend (Matplotlib)</div>
+                        <h4 style="margin-bottom: 15px;">Static Power Consumption Timeline</h4>
+                        <img src="/static/images/matplotlib_trend.png" alt="Matplotlib overall trend timeline" style="width: 100%; border-radius: 8px; border: 1px solid var(--border-color);">
+                    </div>
+                    <div class="glass-card" style="text-align: center;">
+                        <div class="badge">Regional Share (Matplotlib)</div>
+                        <h4 style="margin-bottom: 15px;">Regional Grid Distribution Share</h4>
+                        <img src="/static/images/matplotlib_regions.png" alt="Matplotlib regional pie chart" style="width: 100%; border-radius: 8px; border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 3: Tableau Embed -->
+            <div id="tableau-dashboard" class="tab-content">
+                <div class="glass-card" style="padding: 15px;">
+                    <div class="iframe-container">
+                        <iframe
+                            src="https://public.tableau.com/views/Book2_17831532167060/Dashboard1?:showVizHome=no&:embed=true"
+                            frameborder="0">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Electricity Consumption Analysis. Powered by Flask, Pandas, NumPy, Matplotlib, Plotly and Tableau.</p>
+    </footer>
+
+    <!-- Javascript Handlers -->
+    <script>
+        function switchTab(evtOrStr, tabId) {
+            let tab = tabId;
+            let target = null;
+            
+            if (typeof evtOrStr === 'string') {
+                tab = evtOrStr;
+            } else if (evtOrStr && evtOrStr.currentTarget) {
+                target = evtOrStr.currentTarget;
+            }
+            
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+
+            document.getElementById(tab).classList.add("active");
+            
+            // Set active button
+            if (target) {
+                target.classList.add("active");
+            } else {
+                // Find button with matching click handler or search index
+                const btns = document.querySelectorAll(".tab-btn");
+                if (tab === 'interactive-plotly') btns[0].classList.add("active");
+                if (tab === 'static-matplotlib') btns[1].classList.add("active");
+                if (tab === 'tableau-dashboard') btns[2].classList.add("active");
+            }
+        }
+        
+        // Wrap switcher for compatibility
+        window.switchTab = function(evt, tabId) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            document.getElementById(tabId).classList.add("active");
+            if (evt && evt.currentTarget) {
+                evt.currentTarget.classList.add("active");
+            }
+        };
+
+        // Fetch Plotly Data and render
+        fetch('/api/chart-data')
+            .then(res => res.json())
+            .then(data => {
+                // Render Scenario 1 Plotly
+                const s1 = JSON.parse(data.scenario1);
+                Plotly.newPlot('scenario1Plotly', s1.data, s1.layout, {responsive: true});
+                
+                // Render Scenario 2 Plotly
+                const s2 = JSON.parse(data.scenario2);
+                Plotly.newPlot('scenario2Plotly', s2.data, s2.layout, {responsive: true});
+                
+                // Render Scenario 3 Plotly
+                const s3 = JSON.parse(data.scenario3);
+                Plotly.newPlot('scenario3Plotly', s3.data, s3.layout, {responsive: true});
+                
+                // Render Recovery Table
+                const tableBody = document.querySelector("#recoveryTable tbody");
+                tableBody.innerHTML = "";
+                data.recovery_table.forEach(row => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>${row.State}</strong></td>
+                        <td>${row["Pre-Lockdown Avg"]} MU</td>
+                        <td>${row["Lockdown Avg"]} MU</td>
+                        <td>${row["Post-Lockdown Avg"]} MU</td>
+                        <td style="color: ${row["Recovery Rate (%)"] >= 100 ? 'var(--accent-teal)' : 'var(--accent-red)'}; font-weight: bold;">
+                            ${row["Recovery Rate (%)"]}%
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            })
+            .catch(err => console.error("Error loading Plotly charts: ", err));
+    </script>
+</body>
+</html>

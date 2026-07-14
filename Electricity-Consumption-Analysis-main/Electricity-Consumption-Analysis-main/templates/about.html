@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Console & Metadata | Electricity Consumption Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sticky Nav -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Plugging into the Future</span>
+        </div>
+        <div class="nav-links">
+            <a href="/"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/story"><i class="fa-solid fa-book-open"></i> Story</a>
+            <a href="/about" class="active"><i class="fa-solid fa-terminal"></i> SQL Console & Info</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container" style="padding-top: 40px;">
+        
+        <!-- Page Title -->
+        <h2 class="section-title"><i class="fa-solid fa-code"></i> SQL Engine & Performance Playground</h2>
+
+        <div class="grid-2">
+            <!-- Left Panel: SQL Console -->
+            <div>
+                <div class="sql-console">
+                    <div class="sql-header">
+                        <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">
+                            <i class="fa-solid fa-terminal" style="color: var(--accent-blue);"></i> SQLite Query Playground
+                        </span>
+                        <div class="sql-actions">
+                            <button class="sql-btn secondary" onclick="clearConsole()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                            <button class="sql-btn" onclick="runQuery()"><i class="fa-solid fa-play"></i> Run Query</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sql-editor">
+                        <textarea id="sqlQueryText" placeholder="Write your SELECT SQL query here..."></textarea>
+                    </div>
+
+                    <div class="sql-presets">
+                        <p><i class="fa-solid fa-tags"></i> Preloaded SQL Queries (Click to Load)</p>
+                        <div class="preset-list">
+                            <span class="preset-chip" onclick="loadQuery('select_count')">Count Records</span>
+                            <span class="preset-chip" onclick="loadQuery('select_sample')">Sample Data</span>
+                            <span class="preset-chip" onclick="loadQuery('states_list')">List of States</span>
+                            <span class="preset-chip" onclick="loadQuery('usage_state')">Top States</span>
+                            <span class="preset-chip" onclick="loadQuery('usage_region')">Regional Split</span>
+                            <span class="preset-chip" onclick="loadQuery('usage_yearly')">Yearly Trends</span>
+                            <span class="preset-chip" onclick="loadQuery('dense_rank')">State Rankings</span>
+                            <span class="preset-chip" onclick="loadQuery('high_spikes')">Usage Peaks</span>
+                        </div>
+                    </div>
+
+                    <!-- Output Console -->
+                    <div class="sql-results" id="sqlResultsPanel" style="display: none;">
+                        <div class="results-meta" id="resultsMeta">
+                            <!-- Metadatas dynamically generated -->
+                        </div>
+                        <div class="data-table-wrapper" id="resultsTableContainer">
+                            <!-- Table dynamically generated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Database Schema & Metadata -->
+            <div>
+                <div class="glass-card" style="margin-bottom: 30px;">
+                    <h3><i class="fa-solid fa-database" style="color: var(--accent-blue);"></i> SQLite Table Schema</h3>
+                    <p style="color: var(--text-secondary); font-size: 13px; margin: 10px 0 20px 0;">
+                        The SQLite schema maps exactly to the fields in the historical electricity consumption CSV dataset.
+                    </p>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Column Name</th>
+                                <th>SQL Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>States</strong></td>
+                                <td><code>TEXT</code></td>
+                                <td>Indian State or Union Territory</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Regions</strong></td>
+                                <td><code>TEXT</code></td>
+                                <td>Regional power grid code (e.g. NR, WR, SR)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Latitude</strong></td>
+                                <td><code>REAL</code></td>
+                                <td>State center latitude coordinate</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Longitude</strong></td>
+                                <td><code>REAL</code></td>
+                                <td>State center longitude coordinate</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dates</strong></td>
+                                <td><code>DATE</code></td>
+                                <td>Observation date (format: YYYY-MM-DD)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Usage</strong></td>
+                                <td><code>REAL</code></td>
+                                <td>Daily power consumption in Mega Units (MU)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Performance testing details -->
+                <div class="glass-card">
+                    <h3><i class="fa-solid fa-vial" style="color: var(--accent-teal);"></i> Performance & Analytics Hub</h3>
+                    <p style="color: var(--text-secondary); font-size: 13px; margin: 10px 0 20px 0;">
+                        Metrics detailing system calculations and visualization dimensions required for evaluation.
+                    </p>
+                    <ul class="details-list">
+                        <li>
+                            <i class="fa-solid fa-database"></i>
+                            <div>
+                                <strong>Amount of Data Rendered to DB:</strong>
+                                16,599 total rows ingested cleanly. Indeces applied for date-based ranges.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-filter"></i>
+                            <div>
+                                <strong>Utilization of Data Filters:</strong>
+                                Region classifications (5 distinct values), calendar years, and date range indices.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-calculator"></i>
+                            <div>
+                                <strong>No of Calculation Fields:</strong>
+                                Calculated average monthly consumption, growth recovery ratios, and regional totals.
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-chart-simple"></i>
+                            <div>
+                                <strong>No of Visualizations/Graphs:</strong>
+                                3 native interactive Chart.js widgets, 1 embedded Tableau Dashboard, and 1 Tableau Story.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Resources & Downloads -->
+                <div class="glass-card" style="margin-top: 30px;">
+                    <h3><i class="fa-solid fa-download" style="color: var(--accent-blue);"></i> Resources & Downloads</h3>
+                    <p style="color: var(--text-secondary); font-size: 13px; margin: 10px 0 20px 0;">
+                        Download original dataset, SQL scripts, and documentation files.
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                        <a href="/download/Consumption.csv" class="sql-btn secondary" style="text-decoration: none; justify-content: center; align-items: center; display: flex;">
+                            <i class="fa-solid fa-file-csv"></i> Dataset (CSV)
+                        </a>
+                        <a href="/download/electricity.sql" class="sql-btn secondary" style="text-decoration: none; justify-content: center; align-items: center; display: flex;">
+                            <i class="fa-solid fa-file-code"></i> SQL Script
+                        </a>
+                        <a href="/download/Readme.pdf" class="sql-btn secondary" style="text-decoration: none; justify-content: center; align-items: center; display: flex;">
+                            <i class="fa-solid fa-file-pdf"></i> Readme (PDF)
+                        </a>
+                        <a href="/download/electricity_consumption.docx" class="sql-btn secondary" style="text-decoration: none; justify-content: center; align-items: center; display: flex;">
+                            <i class="fa-solid fa-file-word"></i> Project Doc (DOCX)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Electricity Consumption Analysis. Powered by Flask, SQL, and Tableau.</p>
+    </footer>
+
+    <!-- SQL Console Javascript -->
+    <script>
+        const queryPresets = {
+            select_count: "SELECT COUNT(*) as Total_Records FROM Electricity;",
+            select_sample: "SELECT * FROM Electricity LIMIT 10;",
+            states_list: "SELECT DISTINCT States FROM Electricity ORDER BY States;",
+            usage_state: "SELECT States,\n       ROUND(SUM(Usage), 2) as Total_Usage_MU\nFROM Electricity\nGROUP BY States\nORDER BY Total_Usage_MU DESC\nLIMIT 10;",
+            usage_region: "SELECT Regions,\n       ROUND(SUM(Usage), 2) as Total_Usage_MU\nFROM Electricity\nGROUP BY Regions\nORDER BY Total_Usage_MU DESC;",
+            usage_yearly: "SELECT strftime('%Y', Dates) as Year,\n       ROUND(SUM(Usage), 2) as Total_Usage_MU\nFROM Electricity\nGROUP BY Year\nORDER BY Year;",
+            dense_rank: "SELECT States,\n       ROUND(SUM(Usage), 2) as Total_Usage,\n       DENSE_RANK() OVER (ORDER BY SUM(Usage) DESC) as Rank\nFROM Electricity\nGROUP BY States\nLIMIT 15;",
+            high_spikes: "SELECT States, Dates, Usage FROM Electricity WHERE Usage > 400 ORDER BY Usage DESC LIMIT 15;"
+        };
+
+        function loadQuery(presetKey) {
+            const query = queryPresets[presetKey];
+            if (query) {
+                document.getElementById('sqlQueryText').value = query;
+            }
+        }
+
+        function clearConsole() {
+            document.getElementById('sqlQueryText').value = '';
+            document.getElementById('sqlResultsPanel').style.display = 'none';
+        }
+
+        function runQuery() {
+            const query = document.getElementById('sqlQueryText').value;
+            const resultsPanel = document.getElementById('sqlResultsPanel');
+            const metaDiv = document.getElementById('resultsMeta');
+            const tableContainer = document.getElementById('resultsTableContainer');
+
+            if (!query.trim()) {
+                alert("Please write a SQL query first.");
+                return;
+            }
+
+            // Show loading indicators
+            resultsPanel.style.display = 'block';
+            metaDiv.innerHTML = '<span><i class="fa-solid fa-spinner fa-spin"></i> Executing query on SQL engine...</span>';
+            tableContainer.innerHTML = '';
+
+            fetch('/api/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    metaDiv.innerHTML = `<span style="color: var(--accent-red); font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> SQL Error:</span> ${data.error}`;
+                    return;
+                }
+
+                // Render meta
+                metaDiv.innerHTML = `
+                    <span>Rows Returned: <strong>${data.count}</strong></span>
+                    <span>Execution Speed: <strong>${data.execution_time} ms</strong></span>
+                `;
+
+                if (data.count === 0) {
+                    tableContainer.innerHTML = '<div style="padding: 20px; color: var(--text-secondary); text-align: center;">Query successfully executed. Returned 0 rows.</div>';
+                    return;
+                }
+
+                // Generate table HTML
+                let tableHtml = '<table class="data-table"><thead><tr>';
+                
+                // Headers
+                data.headers.forEach(h => {
+                    tableHtml += `<th>${h}</th>`;
+                });
+                tableHtml += '</tr></thead><tbody>';
+
+                // Rows
+                data.rows.forEach(row => {
+                    tableHtml += 'tr';
+                    tableHtml += '<tr>';
+                    row.forEach(val => {
+                        tableHtml += `<td>${val === null ? 'NULL' : val}</td>`;
+                    });
+                    tableHtml += '</tr>';
+                });
+
+                tableHtml += '</tbody></table>';
+                
+                if (data.count > 500) {
+                    tableHtml += '<div style="padding: 10px; font-size: 11px; color: var(--text-secondary); text-align: center; border-top: 1px solid var(--border-color);">Showing first 500 rows only.</div>';
+                }
+
+                tableContainer.innerHTML = tableHtml;
+            })
+            .catch(err => {
+                metaDiv.innerHTML = `<span style="color: var(--accent-red); font-weight: bold;"><i class="fa-solid fa-circle-xmark"></i> Connection Error:</span> ${err}`;
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugging into the Future | Electricity Consumption Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sticky Nav -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Plugging into the Future</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/story"><i class="fa-solid fa-book-open"></i> Story</a>
+            <a href="/about"><i class="fa-solid fa-terminal"></i> SQL Console & Info</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-glow"></div>
+        <div class="badge">Python Data Analytics & BI Project</div>
+        <h1>An Exploration of Electricity Consumption Patterns</h1>
+        <p>
+            An in-depth data analytics study analyzing state-wise electricity consumption trends across India.
+            Spanning from January 2019 to December 2020, this analysis captures seasonal variations, regional demands,
+            and the historic impact of the nationwide COVID-19 lockdown on industrial and residential energy usage.
+        </p>
+
+        <!-- Stats Grid -->
+        <div class="hero-stats">
+            <div class="glass-card stat-box">
+                <div class="stat-num">{{ "{:,}".format(stats.total_records) }}</div>
+                <div class="stat-label">Total Records Logged</div>
+            </div>
+            <div class="glass-card stat-box">
+                <div class="stat-num">{{ stats.states_count }}</div>
+                <div class="stat-label">States & UTs Covered</div>
+            </div>
+            <div class="glass-card stat-box">
+                <div class="stat-num">{{ "{:,.1f}".format(stats.total_usage / 1000) }}K</div>
+                <div class="stat-label">Total Usage (Giga Units)</div>
+            </div>
+            <div class="glass-card stat-box">
+                <div class="stat-num">24 Months</div>
+                <div class="stat-label">Time Span (2019 - 2020)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scenarios Section -->
+    <div class="container" style="padding-top: 0;">
+        <h2 class="section-title"><i class="fa-solid fa-circle-nodes"></i> Core Analysis Scenarios</h2>
+        <div class="grid-3">
+            <div class="glass-card">
+                <div class="icon-container">
+                    <i class="fa-solid fa-chart-area"></i>
+                </div>
+                <h3>Scenario 1: Overall Trends</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
+                    Track month-by-month national consumption patterns. Analyze demand spikes during peak summer months and the significant contraction in power usage during the nationwide lockdown (March-June 2020).
+                </p>
+            </div>
+            <div class="glass-card">
+                <div class="icon-container">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <h3>Scenario 2: Regional Demands</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
+                    Compare uneven demand distributions between Northern, Southern, Eastern, Western, and Northeastern grid regions. Explore how varying climate profiles and industrial density drive electricity needs.
+                </p>
+            </div>
+            <div class="glass-card">
+                <div class="icon-container">
+                    <i class="fa-solid fa-arrows-spin"></i>
+                </div>
+                <h3>Scenario 3: Lockdown Recovery</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
+                    Investigate how quickly economic activities and power demands rebounded across states. Compare post-lockdown averages to pre-lockdown levels to understand regional recovery paces.
+                </p>
+            </div>
+        </div>
+
+        <!-- Technical Integration System Architecture -->
+        <h2 class="section-title" style="margin-top: 60px;"><i class="fa-solid fa-diagram-project"></i> Project System Architecture</h2>
+        <div class="glass-card" style="padding: 40px; margin-top: 20px;">
+            <div class="grid-2" style="align-items: center; margin-bottom: 0;">
+                <div>
+                    <h3 style="margin-bottom: 15px;">Advanced Analytics Pipeline</h3>
+                    <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 15px;">
+                        This platform showcases how raw energy time-series datasets can be parsed, loaded into a relational SQL database, queried for critical metrics, and beautifully visualized using dynamic dashboards.
+                    </p>
+                    <ul class="details-list">
+                        <li><i class="fa-solid fa-circle-check"></i> <strong>Pandas & SQLite</strong> clean, format, and store 16,599 records cleanly.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> <strong>NumPy Matrix Math</strong> calculates post-lockdown rebound growth metrics.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> <strong>Matplotlib & Plotly</strong> power static reports and high-speed web charts.</li>
+                        <li><i class="fa-solid fa-circle-check"></i> <strong>Flask Web Server</strong> provides dynamic database querying and API endpoints.</li>
+                    </ul>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); font-family: monospace; font-size: 13px; line-height: 1.8;">
+                    <div style="color: var(--accent-blue); font-weight: bold;">[Pipeline Flow Diagram]</div>
+                    <div>1. CSV Ingestion & Pandas Cleansing  ──► Cleaned</div>
+                    <div>2. SQLite Database Ingestion         ──► Ingested</div>
+                    <div>3. NumPy Recovery Analysis Calculation ──► Computed</div>
+                    <div>4. Matplotlib Static Exports        ──► Generated</div>
+                    <div>5. Dynamic Interactive Plotly Charts ──► Rendered</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Electricity Consumption Analysis. Powered by Flask, Pandas, NumPy, Matplotlib, Plotly and Tableau.</p>
+    </footer>
+
+</body>
+</html>
